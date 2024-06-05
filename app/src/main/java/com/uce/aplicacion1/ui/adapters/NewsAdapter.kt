@@ -1,3 +1,4 @@
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -8,10 +9,11 @@ import com.uce.aplicacion1.ui.entites.NewsDataUI
 import com.uce.aplicacion1.databinding.ItemTopNewsBinding
 import com.uce.aplicacion1.ui.adapters.NewsDataDiffCallback
 
+
 class NewsAdapter(
     private val onClickItem: (NewsDataUI) -> Unit,
     private val onDeleteItem: (Int) -> Unit,
-    private val onInsertItem: () -> Unit
+    private val onInsertItem: () -> Unit // Define el tipo de parámetro si es necesario
 ) : ListAdapter<NewsDataUI, NewsAdapter.NewsViewHolder>(NewsDataDiffCallback()) {
 
     inner class NewsViewHolder(val binding: ItemTopNewsBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -20,7 +22,7 @@ class NewsAdapter(
             binding.txtUrlNews.text = data.url
             binding.txtDescNews.text = data.description
             binding.imgNews.load(data.image) {
-                placeholder(R.drawable.clarin)
+                placeholder(R.drawable.newsfondo)
             }
             binding.root.setOnClickListener {
                 onClickItem(data)
@@ -38,5 +40,11 @@ class NewsAdapter(
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         holder.bind(getItem(position), onClickItem, onDeleteItem)
+    }
+
+    // Método para insertar un nuevo elemento
+    fun insertItem(newItem: NewsDataUI) {
+        onInsertItem() // Llama al callback si es necesario
+        submitList(currentList + newItem) // Utiliza DiffUtil para insertar el nuevo elemento
     }
 }

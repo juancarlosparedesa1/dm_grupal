@@ -21,13 +21,13 @@
             android:name=".ui.activitys.clash.ClashPlayerActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activitys.ConstrainActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activitys.DetailItemActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activitys.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activitys.ConstrainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
