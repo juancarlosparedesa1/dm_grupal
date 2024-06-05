@@ -4,11 +4,13 @@ import NewsAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.uce.aplicacion1.R
@@ -112,6 +114,15 @@ class ConstrainActivity : AppCompatActivity() {
         items.removeAt(position)
         newsAdapter.submitList(items) // Corrección aquí
     }
+
+    private fun showBottomSheet() {
+        val bottomSheet = findViewById<FrameLayout>(R.id.favItem)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
 
     private fun addItem() {
         binding.pgbarLoadData.visibility = View.VISIBLE
