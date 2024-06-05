@@ -1,5 +1,6 @@
-package com.uce.aplicacion1.ui.activitys
 
+package com.uce.aplicacion1.ui.activitys
+import NewsAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -7,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -15,7 +15,6 @@ import com.uce.aplicacion1.R
 import com.uce.aplicacion1.databinding.ActivityConstrainBinding
 import com.uce.aplicacion1.logic.usercase.GetAllTopsNewUserCase
 import com.uce.aplicacion1.logic.usercase.GetOneTopNewUserCase
-import com.uce.aplicacion1.ui.adapters.NewsAdapter
 import com.uce.aplicacion1.ui.entites.NewsDataUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,9 +22,9 @@ import kotlinx.coroutines.withContext
 
 class ConstrainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityConstrainBinding
-    private var items : MutableList<NewsDataUI> = mutableListOf()
-    private lateinit var newsAdapter : NewsAdapter
+    private lateinit var binding: ActivityConstrainBinding
+    private var items: MutableList<NewsDataUI> = mutableListOf()
+    private lateinit var newsAdapter: NewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,27 +37,18 @@ class ConstrainActivity : AppCompatActivity() {
         initVariables()
         initListeners()
         initData()
-
     }
 
     private fun initVariables() {
         newsAdapter = NewsAdapter(
-            {descriptionItem(it)},
-            {deleteItem(it)},
-            {addItem()})
+            { descriptionItem(it) },
+            { deleteItem(it) },
+            { addItem() })
 
         binding.rvTopNews.adapter = newsAdapter
-        //binding.rvTopNews.layoutManager = LinearLayoutManager(
-        //    this, LinearLayoutManager.HORIZONTAL, false
-        //)
-
         binding.rvTopNews.layoutManager = CarouselLayoutManager()
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
             }
 
@@ -72,23 +62,22 @@ class ConstrainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(binding.rvTopNews)
     }
 
-
-    private fun initListeners(){
-        binding.refreshRV.setOnRefreshListener{
+    private fun initListeners() {
+        binding.refreshRV.setOnRefreshListener {
             initData()
             binding.refreshRV.isRefreshing = false
         }
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when (it.itemId){
-                R.id.listarItem ->{
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.listarItem -> {
                     startActivity(Intent(this, DetailItemActivity::class.java))
                     true
                 }
-                R.id.favItem->{
+                R.id.favItem -> {
                     Snackbar.make(binding.refreshRV, "Item Favoritos", Snackbar.LENGTH_LONG).show()
                     true
                 }
-                R.id.noFavItem->{
+                R.id.noFavItem -> {
                     Snackbar.make(binding.refreshRV, "Item no Fap", Snackbar.LENGTH_LONG).show()
                     true
                 }
@@ -97,66 +86,47 @@ class ConstrainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initData(){
+    private fun initData() {
         binding.pgbarLoadData.visibility = View.VISIBLE
-        lifecycleScope.launch( Dispatchers.IO){
-
+        lifecycleScope.launch(Dispatchers.IO) {
             val result = GetAllTopsNewUserCase().invoke()
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 binding.pgbarLoadData.visibility = View.INVISIBLE
                 result.onSuccess {
                     items = it.toMutableList()
-                    newsAdapter.listItems=items
-                    newsAdapter.notifyDataSetChanged() // Notifica al adaptador que los datos han cambiado
+                    newsAdapter.submitList(items) // Corrección aquí
                 }
                 result.onFailure {
-                    Snackbar.make(binding.refreshRV,it.message.toString(),Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.refreshRV, it.message.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    private fun descriptionItem(news: NewsDataUI){
-
+    private fun descriptionItem(news: NewsDataUI) {
         Snackbar.make(binding.refreshRV, news.name, Snackbar.LENGTH_LONG).show()
-        /*val intent = Intent(
-            this,
-            DetailItemActivity::class.java
-        ).apply {
-            putExtra("id", news.id)
-        }
-        startActivity(intent)
-
-         */
     }
 
-    private fun deleteItem(position: Int){
+    private fun deleteItem(position: Int) {
         Toast.makeText(this, position.toString(), Toast.LENGTH_SHORT).show()
         items.removeAt(position)
-        newsAdapter.listItems = items
-        newsAdapter.notifyItemRemoved(position)
+        newsAdapter.submitList(items) // Corrección aquí
     }
 
-
-
-    private fun addItem(){
+    private fun addItem() {
         binding.pgbarLoadData.visibility = View.VISIBLE
-        lifecycleScope.launch( Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO) {
             val addNew = GetOneTopNewUserCase().invoke()
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 binding.pgbarLoadData.visibility = View.INVISIBLE
                 addNew.onSuccess {
                     items.add(it)
-                    newsAdapter.listItems=items
-                    newsAdapter.notifyItemInserted(items.size-1)
+                    newsAdapter.submitList(items) // Corrección aquí
                 }
                 addNew.onFailure {
-                    Snackbar.make(binding.refreshRV,it.message.toString(),Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.refreshRV, it.message.toString(), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
-
-
     }
-
 }

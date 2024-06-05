@@ -57,4 +57,6 @@ dependencies {
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation(libs.coil)
     implementation ("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+    //reciclerView
+    implementation ("androidx.recyclerview:recyclerview:1.2.0")
 }
