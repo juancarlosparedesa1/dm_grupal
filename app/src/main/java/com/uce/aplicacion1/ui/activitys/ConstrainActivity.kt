@@ -3,7 +3,9 @@ package com.uce.aplicacion1.ui.activitys
 import NewsAdapter
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.uce.aplicacion1.R
@@ -39,6 +42,8 @@ class ConstrainActivity : AppCompatActivity() {
         initVariables()
         initListeners()
         initData()
+        initBottom()
+
     }
 
     private fun initVariables() {
@@ -65,6 +70,8 @@ class ConstrainActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
+
+
         binding.refreshRV.setOnRefreshListener {
             initData()
             binding.refreshRV.isRefreshing = false
@@ -120,6 +127,30 @@ class ConstrainActivity : AppCompatActivity() {
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    private fun initBottom(){
+
+        class ModalBottomSheet : BottomSheetDialogFragment() {
+
+            override fun onCreateView(
+                inflater: LayoutInflater,
+                container: ViewGroup?,
+                savedInstanceState: Bundle?
+            ): View? = inflater.inflate(R.layout.activity_constrain, container, false)
+
+        }
+
+        val standardBottomSheet = findViewById<FrameLayout>(R.id.standard_bottom_sheet)
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+
+        binding.standardBottomSheet.setOnClickListener {
+
+            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            binding.txtNombre.text = "Juanito"
+            binding.txtClave.text = "123456"
+            standardBottomSheetBehavior.saveFlags = BottomSheetBehavior.SAVE_ALL
         }
     }
 

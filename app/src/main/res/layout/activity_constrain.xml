@@ -10,22 +10,41 @@
 
     <FrameLayout
         android:id="@+id/standard_bottom_sheet"
-        style="@style/Widget.Material3.BottomSheet"
-        android:layout_height="300dp"
         android:layout_width="match_parent"
+        android:layout_height="300dp"
+        style="@style/Widget.Material3.BottomSheet"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <!-- Drag handle for accessibility -->
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/drag_handle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <!-- Bottom sheet contents. -->
         <TextView
+            android:id="@+id/txt_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Ejemplo"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:text="Texto 1"/>
+
+        <TextView
+            android:id="@+id/txt_clave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Texto 2"/>
+
+        <Button
+            android:id="@+id/bottomsheet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Boton accion" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Material"/>
+
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
